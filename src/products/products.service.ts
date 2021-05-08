@@ -1,8 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
+import { ProductNotFoundException } from './exception/productNotFound.exception';
 import Products from './products.entity';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class ProductsService {
     if (product) {
       return product;
     }
-    throw new HttpException('product not found', HttpStatus.NOT_FOUND);
+    throw new ProductNotFoundException(id);
   }
   async createProduct(product: CreateProductDto) {
     const newProduct = await this.service.create(product);
@@ -32,12 +33,12 @@ export class ProductsService {
     if (updatedProduct) {
       return updatedProduct;
     }
-    throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    throw new ProductNotFoundException(id);
   }
   async deleteProduct(id: number) {
     const deleteResponse = await this.service.delete(id);
     if (!deleteResponse.affected) {
-      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+      throw new ProductNotFoundException(id);
     }
   }
 }

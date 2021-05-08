@@ -25,6 +25,13 @@ import User from './users/user.entity';
     AuthenticationModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Global exception
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: ExceptionLoggerFilter,
+    // },
+  ],
 })
 export class AppModule {}

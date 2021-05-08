@@ -6,6 +6,7 @@ import { RegisterDto } from './dto/registerDto.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import TokenPayload from './tokenPayload.interface';
+import User from 'src/users/user.entity';
 
 @Injectable()
 export class AuthenticationService {
@@ -25,8 +26,8 @@ export class AuthenticationService {
         ...registrationData,
         password: hashedPassword,
       });
-      createdUser.password = undefined;
-      return createdUser;
+
+      return new User(createdUser);
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new HttpException(
@@ -44,8 +45,7 @@ export class AuthenticationService {
     try {
       const user = await this.usersService.getByEmail(email);
       await this.verifyPassword(plainTextPassword, user.password);
-      user.password = undefined;
-      return user;
+      return new User(user);
     } catch (error) {
       throw new HttpException(
         'Wrong credentials provided',

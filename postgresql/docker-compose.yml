@@ -6,6 +6,7 @@ volumes:
 services:
   pg_db:
     image: postgres
+    container_name: postgres_delivery
     restart: always
     environment:
       - POSTGRES_PASSWORD=secret

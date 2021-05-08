@@ -32,12 +32,12 @@ export class ProductsService {
     if (updatedProduct) {
       return updatedProduct;
     }
-    throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
   }
   async deleteProduct(id: number) {
     const deleteResponse = await this.service.delete(id);
     if (!deleteResponse.affected) {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     }
   }
 }

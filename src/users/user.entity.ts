@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -14,13 +14,9 @@ class User {
   public name: string;
 
   @Column()
+  @Exclude()
+  @Type(() => String)
   public password: string;
-
-  // Serialize no work, this case is success, but you need create new instance when return data
-  constructor(partial: Partial<User>) {
-    Object.assign(this, partial);
-    delete this.password;
-  }
 }
 
 export default User;

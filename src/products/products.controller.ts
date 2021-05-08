@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductsService } from './products.service';
@@ -22,6 +24,7 @@ export class ProductsController {
   async getProductById(@Param('id') id: string) {
     return this.producstService.getProductById(Number(id));
   }
+  @UseGuards(JwtAuthenticationGuard)
   @Post('create')
   async createProduct(@Body() dto: CreateProductDto) {
     return this.producstService.createProduct(dto);

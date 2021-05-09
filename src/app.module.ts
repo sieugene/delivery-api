@@ -7,8 +7,11 @@ import { TypeOrmConfigService } from './config/config.service';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { CategoriesModule } from './categories/categories.module';
 import Products from './products/products.entity';
 import User from './users/user.entity';
+import Address from './users/address.entity';
+import Category from './categories/categories.entity';
 
 @Module({
   imports: [
@@ -16,13 +19,14 @@ import User from './users/user.entity';
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
         ...new TypeOrmConfigService(configService).getTypeOrmConfig(),
-        entities: [Products, User],
+        entities: [Products, User, Address, Category],
       }),
       inject: [ConfigService],
     }),
     ProductsModule,
     UsersModule,
     AuthenticationModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,5 +1,12 @@
-import { Transform, Type } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Type } from 'class-transformer';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import Category from '../categories/categories.entity';
 
 @Entity()
 class Products {
@@ -12,14 +19,10 @@ class Products {
   @Column()
   public content: string;
 
-  @Column({ nullable: true })
-  @Type(() => String)
-  @Transform(({ value }) => {
-    if (value !== null) {
-      return value;
-    }
-  })
-  public category?: string;
+  @ManyToMany((type) => Category, (category) => category.products)
+  @JoinTable()
+  @Type(() => Category)
+  categories: Category[];
 }
 
 export default Products;

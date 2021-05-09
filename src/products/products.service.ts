@@ -12,11 +12,14 @@ export class ProductsService {
     @InjectRepository(Products)
     private service: Repository<Products>,
   ) {}
+
   getAllProducts() {
-    return this.service.find();
+    return this.service.find({ relations: ['categories'] });
   }
   async getProductById(id: number) {
-    const product = await this.service.findOne(id);
+    const product = await this.service.findOne(id, {
+      relations: ['categories'],
+    });
     if (product) {
       return product;
     }
@@ -29,7 +32,9 @@ export class ProductsService {
   }
   async updateProduct(id: number, product: UpdateProductDto) {
     await this.service.update(id, product);
-    const updatedProduct = await this.service.findOne(id);
+    const updatedProduct = await this.service.findOne(id, {
+      relations: ['categories'],
+    });
     if (updatedProduct) {
       return updatedProduct;
     }

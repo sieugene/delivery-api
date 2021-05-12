@@ -8,10 +8,12 @@ import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FilesModule } from './files/files.module';
 import Products from './products/products.entity';
 import User from './users/user.entity';
 import Address from './users/address.entity';
 import Category from './categories/categories.entity';
+import PublicFile from './files/publicFile.entity';
 
 @Module({
   imports: [
@@ -19,7 +21,7 @@ import Category from './categories/categories.entity';
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
         ...new TypeOrmConfigService(configService).getTypeOrmConfig(),
-        entities: [Products, User, Address, Category],
+        entities: [Products, User, Address, Category, PublicFile],
       }),
       inject: [ConfigService],
     }),
@@ -27,6 +29,7 @@ import Category from './categories/categories.entity';
     UsersModule,
     AuthenticationModule,
     CategoriesModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [

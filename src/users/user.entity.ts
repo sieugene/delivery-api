@@ -1,9 +1,11 @@
 import { Exclude, Type } from 'class-transformer';
+import PrivateFile from 'src/files/privateFile.entity';
 import PublicFile from 'src/files/publicFile.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -39,6 +41,9 @@ class User {
     nullable: true,
   })
   public avatar?: PublicFile;
+
+  @OneToMany(() => PrivateFile, (file: PrivateFile) => file.owner)
+  public files: PrivateFile[];
 }
 
 export default User;

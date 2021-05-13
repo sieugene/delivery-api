@@ -14,6 +14,8 @@ import User from './users/user.entity';
 import Address from './users/address.entity';
 import Category from './categories/categories.entity';
 import PublicFile from './files/publicFile.entity';
+import PrivateFile from './files/privateFile.entity';
+import { PrivateFilesModule } from './files/privateFiles.module';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import PublicFile from './files/publicFile.entity';
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
         ...new TypeOrmConfigService(configService).getTypeOrmConfig(),
-        entities: [Products, User, Address, Category, PublicFile],
+        entities: [Products, User, Address, Category, PublicFile, PrivateFile],
       }),
       inject: [ConfigService],
     }),
@@ -30,6 +32,7 @@ import PublicFile from './files/publicFile.entity';
     AuthenticationModule,
     CategoriesModule,
     FilesModule,
+    PrivateFilesModule,
   ],
   controllers: [AppController],
   providers: [

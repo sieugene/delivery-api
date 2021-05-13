@@ -1,6 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilesService } from 'src/files/files.service';
+import { PrivateFilesService } from 'src/files/privateFile.service';
 import { Repository } from 'typeorm';
 import Address from './address.entity';
 import { CreateUserDto } from './dto/createUserDto.dto';
@@ -14,6 +20,7 @@ export class UsersService {
     @InjectRepository(Address)
     private addressRepository: Repository<Address>,
     private readonly filesService: FilesService,
+    private readonly privateFilesService: PrivateFilesService,
   ) {}
 
   async getAllAddressesWithUsers() {
@@ -77,6 +84,45 @@ export class UsersService {
         avatar: null,
       });
       await this.filesService.deletePublicFile(fileId);
+    }
+  }
+  async addPrivateFile(userId: number, imageBuffer: Buffer, filename: string) {
+    return this.privateFilesService.uploadPrivateFile(
+      imageBuffer,
+      userId,
+      filename,
+    );
+  }
+  async deletePrivateFile(ownerId: number, fileId: number) {
+    return this.privateFilesService.deletePrivateFile(ownerId, fileId);
+  }
+  async getPrivateFile(userId: number, fileId: number) {
+    const file = await this.privateFilesService.getPrivateFile(fileId);
+    if (file.info.owner.id === userId) {
+      return file;
+    }
+    throw new UnauthorizedException();
+  }
+
+  async getAllPrivateFiles(userId: number) {
+    const userWithFiles = await this.userRepository.findOne(
+      { id: userId },
+      {
+        relations: ['files'],
+      },
+    );
+    if (userWithFiles) {
+      return Promise.all(
+        userWithFiles.files.map(async (file) => {
+          const url = await this.privateFilesService.generatePresignedUrl(
+            file.key,
+          );
+          return {
+            ...file,
+            url,
+          };
+        }),
+      );
     }
   }
 }

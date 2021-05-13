@@ -1,8 +1,11 @@
 import {
   Controller,
   Delete,
+  Get,
+  Param,
   Post,
   Req,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -12,6 +15,8 @@ import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard'
 import RequestWithUser from 'src/authentication/requestWithUser.interface';
 import { UsersService } from './users.service';
 import { Express } from 'express';
+import { Response } from 'express';
+import FindOneParams from 'src/utils/findOneParams';
 
 @Controller('users')
 export class UsersController {
@@ -33,8 +38,50 @@ export class UsersController {
 
   @Delete('avatar')
   @UseGuards(JwtAuthenticationGuard)
-  @UseInterceptors(FileInterceptor('file'))
   async deleteAvatar(@Req() request: RequestWithUser) {
     return this.usersService.deleteAvatar(request.user.id);
+  }
+
+  @Post('files')
+  @UseGuards(JwtAuthenticationGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addPrivateFile(
+    @Req() request: RequestWithUser,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.usersService.addPrivateFile(
+      request.user.id,
+      file.buffer,
+      file.originalname,
+    );
+  }
+
+  @Delete('files/:id')
+  @UseGuards(JwtAuthenticationGuard)
+  async deletePrivateFile(
+    @Req() request: RequestWithUser,
+    @Param('id') id: number,
+  ) {
+    return this.usersService.deletePrivateFile(request.user.id, id);
+  }
+
+  @Get('files/:id')
+  @UseGuards(JwtAuthenticationGuard)
+  async getPrivateFile(
+    @Req() request: RequestWithUser,
+    @Param() { id }: FindOneParams,
+    @Res() res: Response,
+  ) {
+    const file = await this.usersService.getPrivateFile(
+      request.user.id,
+      Number(id),
+    );
+    file.stream.pipe(res);
+  }
+
+  @Get('files')
+  @UseGuards(JwtAuthenticationGuard)
+  async getAllPrivateFiles(@Req() request: RequestWithUser) {
+    return this.usersService.getAllPrivateFiles(request.user.id);
   }
 }

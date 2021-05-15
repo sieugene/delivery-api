@@ -63,4 +63,10 @@ export class ProductsService {
     }
     return this.service.find({ where: { id: In(ids) } });
   }
+  async getProductsWithAddition(addition: string) {
+    return this.service.query(
+      'SELECT * from products WHERE $1 = ANY(addition)',
+      [addition],
+    );
+  }
 }

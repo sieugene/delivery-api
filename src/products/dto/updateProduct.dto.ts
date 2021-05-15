@@ -14,4 +14,8 @@ export class UpdateProductDto {
   @IsNotEmpty()
   @IsOptional()
   title: string;
+
+  @IsString({ each: true })
+  @IsNotEmpty()
+  addition: string[];
 }

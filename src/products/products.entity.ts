@@ -34,6 +34,9 @@ class Products {
 
   @RelationId((products: Products) => products.author)
   public authorId: number;
+
+  @Column('text', { array: true })
+  public addition: string[];
 }
 
 export default Products;

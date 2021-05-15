@@ -32,6 +32,10 @@ export class ProductsController {
     }
     return this.producstService.getAllProducts();
   }
+  @Get(':addition')
+  async getProductsByAddition(@Param('addition') addition: string) {
+    return this.producstService.getProductsWithAddition(addition);
+  }
   @Get(':id')
   async getProductById(@Param() { id }: FindOneParams) {
     return this.producstService.getProductById(Number(id));

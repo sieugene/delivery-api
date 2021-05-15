@@ -48,6 +48,12 @@ class User {
 
   @OneToMany(() => Products, (products: Products) => products.author)
   public products?: Products[];
+
+  @Column({
+    nullable: true,
+  })
+  @Exclude()
+  public currentHashedRefreshToken?: string;
 }
 
 export default User;

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/users/user.entity';
-import { In, Repository } from 'typeorm';
+import { FindManyOptions, In, MoreThan, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductNotFoundException } from './exception/productNotFound.exception';
@@ -16,8 +16,24 @@ export class ProductsService {
     private productsSearchService: ProductsSearchService,
   ) {}
 
-  getAllProducts() {
-    return this.service.find({ relations: ['categories'] });
+  async getAllProducts(offset?: number, limit?: number, startId?: number) {
+    const where: FindManyOptions<Products>['where'] = {};
+    let separateCount = 0;
+    if (startId) {
+      where.id = MoreThan(startId);
+      separateCount = await this.service.count();
+    }
+
+    const [items, count] = await this.service.findAndCount({
+      where,
+      relations: ['author'],
+      order: {
+        id: 'ASC',
+      },
+      skip: offset,
+      take: limit,
+    });
+    return { items, count: startId ? separateCount : count };
   }
   async getProductById(id: number) {
     const product = await this.service.findOne(id, {
@@ -55,8 +71,18 @@ export class ProductsService {
     }
     await this.productsSearchService.remove(id);
   }
-  async searchForProducts(text: string) {
-    const results = await this.productsSearchService.search(text);
+  async searchForProducts(
+    text: string,
+    offset?: number,
+    limit?: number,
+    startId?: number,
+  ) {
+    const { results } = await this.productsSearchService.search(
+      text,
+      offset,
+      limit,
+      startId,
+    );
     const ids = results.map((result) => result.id);
     if (!ids.length) {
       return [];

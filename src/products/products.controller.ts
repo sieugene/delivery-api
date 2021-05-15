@@ -16,6 +16,7 @@ import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard'
 import RequestWithUser from 'src/authentication/requestWithUser.interface';
 import FindOneParams from 'src/utils/findOneParams';
 import { CreateProductDto } from './dto/createProduct.dto';
+import { PaginationParams } from './dto/paginationParams.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductsService } from './products.service';
 
@@ -24,13 +25,19 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private readonly producstService: ProductsService) {}
   @Get('')
-  async getProducts(@Query('search') search: string) {
-    console.log(search, '!!!!!!');
-
+  async getProducts(
+    @Query('search') search: string,
+    @Query() { offset, limit, startId }: PaginationParams,
+  ) {
     if (search) {
-      return this.producstService.searchForProducts(search);
+      return this.producstService.searchForProducts(
+        search,
+        offset,
+        limit,
+        startId,
+      );
     }
-    return this.producstService.getAllProducts();
+    return this.producstService.getAllProducts(offset, limit, startId);
   }
   @Get(':addition')
   async getProductsByAddition(@Param('addition') addition: string) {

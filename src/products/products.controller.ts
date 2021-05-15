@@ -7,10 +7,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
+  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
+import RequestWithUser from 'src/authentication/requestWithUser.interface';
 import FindOneParams from 'src/utils/findOneParams';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
@@ -21,7 +24,12 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private readonly producstService: ProductsService) {}
   @Get('')
-  async getAll() {
+  async getProducts(@Query('search') search: string) {
+    console.log(search, '!!!!!!');
+
+    if (search) {
+      return this.producstService.searchForProducts(search);
+    }
     return this.producstService.getAllProducts();
   }
   @Get(':id')
@@ -30,8 +38,11 @@ export class ProductsController {
   }
   @UseGuards(JwtAuthenticationGuard)
   @Post('create')
-  async createProduct(@Body() dto: CreateProductDto) {
-    return this.producstService.createProduct(dto);
+  async createProduct(
+    @Req() request: RequestWithUser,
+    @Body() dto: CreateProductDto,
+  ) {
+    return this.producstService.createProduct(dto, request.user);
   }
   @Put(':id')
   async updateProduct(@Param('id') id: number, @Body() dto: UpdateProductDto) {

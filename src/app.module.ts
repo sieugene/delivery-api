@@ -16,6 +16,7 @@ import Category from './categories/categories.entity';
 import PublicFile from './files/publicFile.entity';
 import PrivateFile from './files/privateFile.entity';
 import { PrivateFilesModule } from './files/privateFiles.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PrivateFilesModule } from './files/privateFiles.module';
     CategoriesModule,
     FilesModule,
     PrivateFilesModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,6 +1,7 @@
 import { Exclude, Type } from 'class-transformer';
 import PrivateFile from 'src/files/privateFile.entity';
 import PublicFile from 'src/files/publicFile.entity';
+import Products from 'src/products/products.entity';
 import {
   Column,
   Entity,
@@ -44,6 +45,9 @@ class User {
 
   @OneToMany(() => PrivateFile, (file: PrivateFile) => file.owner)
   public files: PrivateFile[];
+
+  @OneToMany(() => Products, (products: Products) => products.author)
+  public products?: Products[];
 }
 
 export default User;

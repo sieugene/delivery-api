@@ -7,10 +7,12 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
 import Category from '../categories/categories.entity';
+import Comment from '../comment/comment.entity';
 
 @Entity()
 class Products {
@@ -37,6 +39,9 @@ class Products {
 
   @Column('text', { array: true })
   public addition: string[];
+
+  @OneToMany(() => Comment, (comment: Comment) => comment.product)
+  public comments: Comment[];
 }
 
 export default Products;

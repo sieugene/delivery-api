@@ -18,6 +18,8 @@ import PrivateFile from './files/privateFile.entity';
 import { PrivateFilesModule } from './files/privateFiles.module';
 import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
+import { CommentModule } from './comment/comment.module';
+import Comment from './comment/comment.entity';
 
 @Module({
   imports: [
@@ -25,7 +27,15 @@ import { SubscribersModule } from './subscribers/subscribers.module';
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
         ...new TypeOrmConfigService(configService).getTypeOrmConfig(),
-        entities: [Products, User, Address, Category, PublicFile, PrivateFile],
+        entities: [
+          Products,
+          User,
+          Address,
+          Category,
+          PublicFile,
+          PrivateFile,
+          Comment,
+        ],
       }),
       inject: [ConfigService],
     }),
@@ -37,6 +47,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
     PrivateFilesModule,
     SearchModule,
     SubscribersModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [

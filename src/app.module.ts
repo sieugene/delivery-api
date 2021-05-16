@@ -17,6 +17,7 @@ import PublicFile from './files/publicFile.entity';
 import PrivateFile from './files/privateFile.entity';
 import { PrivateFilesModule } from './files/privateFiles.module';
 import { SearchModule } from './search/search.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SearchModule } from './search/search.module';
     FilesModule,
     PrivateFilesModule,
     SearchModule,
+    SubscribersModule,
   ],
   controllers: [AppController],
   providers: [

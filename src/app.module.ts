@@ -9,17 +9,12 @@ import { UsersModule } from './users/users.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
-import Products from './products/products.entity';
-import User from './users/user.entity';
-import Address from './users/address.entity';
-import Category from './categories/categories.entity';
-import PublicFile from './files/publicFile.entity';
-import PrivateFile from './files/privateFile.entity';
 import { PrivateFilesModule } from './files/privateFiles.module';
 import { SearchModule } from './search/search.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { CommentModule } from './comment/comment.module';
-import Comment from './comment/comment.entity';
+import { ExtraProductsModule } from './extra-products/extra-products.module';
+import { ProductCategoriesModule } from './product-categories/product-categories.module';
 
 @Module({
   imports: [
@@ -27,15 +22,6 @@ import Comment from './comment/comment.entity';
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
         ...new TypeOrmConfigService(configService).getTypeOrmConfig(),
-        entities: [
-          Products,
-          User,
-          Address,
-          Category,
-          PublicFile,
-          PrivateFile,
-          Comment,
-        ],
       }),
       inject: [ConfigService],
     }),
@@ -48,6 +34,8 @@ import Comment from './comment/comment.entity';
     SearchModule,
     SubscribersModule,
     CommentModule,
+    ExtraProductsModule,
+    ProductCategoriesModule,
   ],
   controllers: [AppController],
   providers: [

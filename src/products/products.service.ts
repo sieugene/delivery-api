@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/users/user.entity';
 import { FindManyOptions, In, MoreThan, Repository } from 'typeorm';
@@ -6,7 +6,9 @@ import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductNotFoundException } from './exception/productNotFound.exception';
 import Products from './products.entity';
+import { Cache } from 'cache-manager';
 import ProductsSearchService from './productsSearch.service';
+import { GET_PRODUCT_CACHE_KEY } from 'src/utils/constants/productsCacheKey.constant';
 
 @Injectable()
 export class ProductsService {
@@ -14,7 +16,18 @@ export class ProductsService {
     @InjectRepository(Products)
     private service: Repository<Products>,
     private productsSearchService: ProductsSearchService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
+
+  async clearCache() {
+    const keys: string[] = await this.cacheManager.store.keys();
+    keys.forEach((key) => {
+      if (key.startsWith(GET_PRODUCT_CACHE_KEY)) {
+        console.log('WAS CLEARED!');
+        this.cacheManager.del(key);
+      }
+    });
+  }
 
   async getAllProducts(offset?: number, limit?: number, startId?: number) {
     const where: FindManyOptions<Products>['where'] = {};
@@ -51,6 +64,7 @@ export class ProductsService {
     });
     await this.service.save(newProduct);
     await this.productsSearchService.indexProduct(newProduct);
+    await this.clearCache();
     return newProduct;
   }
   async updateProduct(id: number, product: UpdateProductDto) {
@@ -60,6 +74,7 @@ export class ProductsService {
     });
     if (updatedProduct) {
       await this.productsSearchService.update(updatedProduct);
+      await this.clearCache();
       return updatedProduct;
     }
     throw new ProductNotFoundException(id);
@@ -70,6 +85,7 @@ export class ProductsService {
       throw new ProductNotFoundException(id);
     }
     await this.productsSearchService.remove(id);
+    await this.clearCache();
   }
   async searchForProducts(
     text: string,

@@ -1,5 +1,7 @@
 import {
   Body,
+  CacheKey,
+  CacheTTL,
   ClassSerializerInterceptor,
   Controller,
   Delete,
@@ -14,7 +16,9 @@ import {
 } from '@nestjs/common';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
 import RequestWithUser from 'src/authentication/requestWithUser.interface';
+import { GET_PRODUCT_CACHE_KEY } from 'src/utils/constants/productsCacheKey.constant';
 import FindOneParams from 'src/utils/findOneParams';
+import { HttpCacheInterceptor } from 'src/utils/interceptors/httpCache.interceptor';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { PaginationParams } from './dto/paginationParams.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
@@ -24,6 +28,9 @@ import { ProductsService } from './products.service';
 @Controller('products')
 export class ProductsController {
   constructor(private readonly producstService: ProductsService) {}
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheKey(GET_PRODUCT_CACHE_KEY)
+  @CacheTTL(120)
   @Get('')
   async getProducts(
     @Query('search') search: string,

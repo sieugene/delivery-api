@@ -43,6 +43,7 @@
     "amqplib": "^0.7.1",
     "aws-sdk": "^2.905.0",
     "bcrypt": "^5.0.1",
+    "cache-manager": "^3.4.3",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",

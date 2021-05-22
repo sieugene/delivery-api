@@ -19,10 +19,20 @@ import { EmailModule } from './email/email.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EmailSchedulingModule } from './email-scheduling/email-scheduling.module';
 import { ChatModule } from './chat/chat.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
+    GraphQLModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        playground: Boolean(configService.get('GRAPHQL_PLAYGROUND')),
+        autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      }),
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({

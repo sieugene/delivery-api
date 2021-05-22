@@ -7,6 +7,7 @@ import Products from './products.entity';
 import { SearchModule } from 'src/search/search.module';
 import ProductsSearchService from './productsSearch.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ProductsResolver } from './products.resolver';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     SearchModule,
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsSearchService],
+  providers: [ProductsService, ProductsSearchService, ProductsResolver],
 })
 export class ProductsModule {}

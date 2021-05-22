@@ -9,6 +9,7 @@ import Products from './products.entity';
 import { Cache } from 'cache-manager';
 import ProductsSearchService from './productsSearch.service';
 import { GET_PRODUCT_CACHE_KEY } from 'src/utils/constants/productsCacheKey.constant';
+import { CreatePostInput } from './models/products.input';
 
 @Injectable()
 export class ProductsService {
@@ -57,7 +58,7 @@ export class ProductsService {
     }
     throw new ProductNotFoundException(id);
   }
-  async createProduct(product: CreateProductDto, user: User) {
+  async createProduct(product: CreateProductDto | CreatePostInput, user: User) {
     const newProduct = await this.service.create({
       ...product,
       author: user,

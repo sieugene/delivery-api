@@ -15,9 +15,13 @@ import { SubscribersModule } from './subscribers/subscribers.module';
 import { CommentModule } from './comment/comment.module';
 import { ExtraProductsModule } from './extra-products/extra-products.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
+import { EmailModule } from './email/email.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { EmailSchedulingModule } from './email-scheduling/email-scheduling.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
@@ -36,6 +40,8 @@ import { ProductCategoriesModule } from './product-categories/product-categories
     CommentModule,
     ExtraProductsModule,
     ProductCategoriesModule,
+    EmailModule,
+    EmailSchedulingModule,
   ],
   controllers: [AppController],
   providers: [

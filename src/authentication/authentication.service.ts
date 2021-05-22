@@ -6,7 +6,6 @@ import { RegisterDto } from './dto/registerDto.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import TokenPayload from './tokenPayload.interface';
-import User from 'src/users/user.entity';
 
 @Injectable()
 export class AuthenticationService {
@@ -108,6 +107,15 @@ export class AuthenticationService {
         'Wrong credentials provided',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  public async getUserFromAuthenticationToken(token: string) {
+    const payload: TokenPayload = this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+    });
+    if (payload.userId) {
+      return this.usersService.getById(payload.userId);
     }
   }
 }

@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsResolver } from './products.resolver';
 import { UsersModule } from 'src/users/users.module';
 import ProductsLoaders from './loaders/product.loaders';
+import { PubSubModule } from 'src/pub-sub/pub-sub.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import ProductsLoaders from './loaders/product.loaders';
     TypeOrmModule.forFeature([Products]),
     SearchModule,
     UsersModule,
+    PubSubModule,
   ],
   controllers: [ProductsController],
   providers: [

@@ -21,6 +21,7 @@ import { EmailSchedulingModule } from './email-scheduling/email-scheduling.modul
 import { ChatModule } from './chat/chat.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { PubSubModule } from './pub-sub/pub-sub.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { join } from 'path';
       useFactory: (configService: ConfigService) => ({
         playground: Boolean(configService.get('GRAPHQL_PLAYGROUND')),
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+        installSubscriptionHandlers: true,
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -55,6 +57,7 @@ import { join } from 'path';
     EmailModule,
     EmailSchedulingModule,
     ChatModule,
+    PubSubModule,
   ],
   controllers: [AppController],
   providers: [

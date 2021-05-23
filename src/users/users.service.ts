@@ -8,12 +8,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilesService } from 'src/files/files.service';
 import { PrivateFilesService } from 'src/files/privateFile.service';
-import { Connection, Repository } from 'typeorm';
+import { Connection, In, Repository } from 'typeorm';
 import Address from './address.entity';
 import { CreateUserDto } from './dto/createUserDto.dto';
 import User from './user.entity';
 import * as bcrypt from 'bcrypt';
-import { query } from 'express';
 
 @Injectable()
 export class UsersService {
@@ -166,5 +165,10 @@ export class UsersService {
         }),
       );
     }
+  }
+  async getByIds(ids: number[]) {
+    return this.userRepository.find({
+      where: { id: In(ids) },
+    });
   }
 }

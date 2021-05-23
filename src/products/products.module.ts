@@ -8,6 +8,8 @@ import { SearchModule } from 'src/search/search.module';
 import ProductsSearchService from './productsSearch.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsResolver } from './products.resolver';
+import { UsersModule } from 'src/users/users.module';
+import ProductsLoaders from './loaders/product.loaders';
 
 @Module({
   imports: [
@@ -23,8 +25,14 @@ import { ProductsResolver } from './products.resolver';
     }),
     TypeOrmModule.forFeature([Products]),
     SearchModule,
+    UsersModule,
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsSearchService, ProductsResolver],
+  providers: [
+    ProductsService,
+    ProductsSearchService,
+    ProductsResolver,
+    ProductsLoaders,
+  ],
 })
 export class ProductsModule {}

@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { User } from 'src/users/models/user.model';
 
 @ObjectType()
 export class Products {
@@ -10,4 +11,10 @@ export class Products {
 
   @Field(() => [String])
   addition: string[];
+
+  @Field(() => Int)
+  authorId: number;
+
+  @Field()
+  author: User;
 }

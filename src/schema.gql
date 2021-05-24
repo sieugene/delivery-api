@@ -13,7 +13,14 @@ type Products {
   addition: [String!]!
   authorId: Int!
   author: User!
+  createdAt: Timestamp!
+  scheduleDate: Timestamp
 }
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
 
 type Query {
   products: [Products!]!
@@ -27,6 +34,7 @@ input CreatePostInput {
   title: String!
   content: String!
   addition: [String!]!
+  scheduleDate: Timestamp
 }
 
 type Subscription {

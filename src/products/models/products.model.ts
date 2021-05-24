@@ -17,4 +17,10 @@ export class Products {
 
   @Field()
   author: User;
+
+  @Field()
+  createdAt: Date;
+
+  @Field({ nullable: true })
+  scheduleDate?: Date;
 }

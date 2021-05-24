@@ -10,6 +10,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
+  CreateDateColumn,
 } from 'typeorm';
 import Category from '../categories/categories.entity';
 import Comment from '../comment/comment.entity';
@@ -42,6 +43,12 @@ class Products {
 
   @OneToMany(() => Comment, (comment: Comment) => comment.product)
   public comments: Comment[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  scheduleDate?: Date;
 }
 
 export default Products;

@@ -10,4 +10,7 @@ export class CreatePostInput {
 
   @Field(() => [String])
   addition: string[];
+
+  @Field({ nullable: true })
+  scheduleDate?: Date;
 }

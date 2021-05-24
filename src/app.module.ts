@@ -22,6 +22,7 @@ import { ChatModule } from './chat/chat.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PubSubModule } from './pub-sub/pub-sub.module';
+import { Timestamp } from './utils/scalars/timestamp.scalar';
 
 @Module({
   imports: [
@@ -33,6 +34,9 @@ import { PubSubModule } from './pub-sub/pub-sub.module';
         playground: Boolean(configService.get('GRAPHQL_PLAYGROUND')),
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         installSubscriptionHandlers: true,
+        buildSchemaOptions: {
+          dateScalarMode: 'timestamp',
+        },
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -62,6 +66,7 @@ import { PubSubModule } from './pub-sub/pub-sub.module';
   controllers: [AppController],
   providers: [
     AppService,
+    Timestamp,
     // Global exception
     // {
     //   provide: APP_FILTER,

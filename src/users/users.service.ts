@@ -171,4 +171,16 @@ export class UsersService {
       where: { id: In(ids) },
     });
   }
+
+  setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+    return this.userRepository.update(userId, {
+      twoFactorAuthenticationSecret: secret,
+    });
+  }
+
+  async turnOnTwoFactorAuthentication(userId: number) {
+    return this.userRepository.update(userId, {
+      isTwoFactorAuthenticationEnabled: true,
+    });
+  }
 }

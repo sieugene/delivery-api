@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
 import RequestWithUser from 'src/authentication/requestWithUser.interface';
+import JwtTwoFactorGuard from 'src/two-factor-authentication/jwtTwoFactorStrategy.guard';
 import { GET_PRODUCT_CACHE_KEY } from 'src/utils/constants/productsCacheKey.constant';
 import FindOneParams from 'src/utils/findOneParams';
 import { HttpCacheInterceptor } from 'src/utils/interceptors/httpCache.interceptor';
@@ -54,7 +55,7 @@ export class ProductsController {
   async getProductById(@Param() { id }: FindOneParams) {
     return this.producstService.getProductById(Number(id));
   }
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Post('create')
   async createProduct(
     @Req() request: RequestWithUser,

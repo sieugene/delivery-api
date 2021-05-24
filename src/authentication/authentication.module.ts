@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { JwtTwoFactorStrategy } from 'src/two-factor-authentication/jwtTwoFactorStrategy.strategy';
+import { TwoFactorAuthenticationController } from 'src/two-factor-authentication/two-factor-authentication.controller';
+import { TwoFactorAuthenticationService } from 'src/two-factor-authentication/two-factor-authentication.service';
 import { UsersModule } from 'src/users/users.module';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
@@ -30,8 +33,10 @@ import { LocalStrategy } from './local.strategy';
     JwtStrategy,
     ConfigService,
     JwtRefreshTokenStrategy,
+    TwoFactorAuthenticationService,
+    JwtTwoFactorStrategy,
   ],
-  controllers: [AuthenticationController],
+  controllers: [AuthenticationController, TwoFactorAuthenticationController],
   exports: [AuthenticationService],
 })
 export class AuthenticationModule {}

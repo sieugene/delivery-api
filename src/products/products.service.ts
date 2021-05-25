@@ -1,4 +1,9 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/users/user.entity';
 import { FindManyOptions, In, MoreThan, Repository } from 'typeorm';
@@ -10,6 +15,8 @@ import { Cache } from 'cache-manager';
 import ProductsSearchService from './productsSearch.service';
 import { GET_PRODUCT_CACHE_KEY } from 'src/utils/constants/productsCacheKey.constant';
 import { CreatePostInput } from './models/products.input';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Injectable()
 export class ProductsService {
@@ -18,6 +25,7 @@ export class ProductsService {
     private service: Repository<Products>,
     private productsSearchService: ProductsSearchService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async clearCache() {
@@ -29,6 +37,66 @@ export class ProductsService {
       }
     });
   }
+
+  // Prisma
+
+  async getProductsPrisma() {
+    return this.prismaService.products.findMany();
+  }
+
+  async getProductsByIdPrisma(id: number) {
+    const product = await this.prismaService.products.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!product) {
+      throw new NotFoundException('product not found');
+    }
+    return product;
+  }
+
+  async createProductPrisma(product: CreateProductDto) {
+    return this.prismaService.products.create({
+      data: product,
+    });
+  }
+
+  async updateProductPrismae(id: number, product: UpdateProductDto) {
+    try {
+      return await this.prismaService.products.update({
+        data: {
+          ...product,
+          id: undefined,
+        },
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        throw new NotFoundException('product not found');
+      }
+      throw error;
+    }
+  }
+
+  async deleteProductPrisma(id: number) {
+    try {
+      return this.prismaService.products.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        throw new NotFoundException('product not found');
+      }
+      throw error;
+    }
+  }
+
+  // Prisma end
 
   async getAllProducts(offset?: number, limit?: number, startId?: number) {
     const where: FindManyOptions<Products>['where'] = {};

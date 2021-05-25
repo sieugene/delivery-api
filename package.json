@@ -18,7 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "generate-schema": "cat src/*/*.prisma > prisma/schema.prisma"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.12.0",
@@ -36,6 +37,7 @@
     "@nestjs/schedule": "^0.4.3",
     "@nestjs/typeorm": "^7.1.5",
     "@nestjs/websockets": "^7.6.17",
+    "@prisma/client": "^2.23.0",
     "@types/aws-sdk": "^2.7.0",
     "@types/bcrypt": "^3.0.1",
     "@types/cookie": "^0.4.0",
@@ -69,6 +71,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.6.0",
+    "prisma": "^2.23.0",
     "qrcode": "^1.4.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

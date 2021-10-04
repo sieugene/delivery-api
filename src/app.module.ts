@@ -23,7 +23,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PubSubModule } from './pub-sub/pub-sub.module';
 import { Timestamp } from './utils/scalars/timestamp.scalar';
-import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -63,7 +62,6 @@ import { PrismaModule } from './prisma/prisma.module';
     EmailSchedulingModule,
     ChatModule,
     PubSubModule,
-    PrismaModule,
   ],
   controllers: [AppController],
   providers: [

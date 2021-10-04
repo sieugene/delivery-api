@@ -1,3 +1,19 @@
+## How to start?
+#### Install packages
+
+`yarn install`
+
+#### **Env**
+
+`copy from .env.example and paste to .env`
+
+#### Docker compose
+`docker-compose up -d`
+#### Start local development
+`yarn start:dev`
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
